@@ -43,8 +43,8 @@ class Project:
 
         self.id: int = data['id']
         self.author_id: int = data['studentId']
-        self.title: str = data['title']
-        self.description: str = data['desc']
+        self.title: str = data.get('title', '')
+        self.description: str = data.get('desc', '')
         self.project_type: int = data['projectType']
         self.access_type: int = data['accessType']
         self.created_at: datetime.datetime = parser.isoparse(data['createdAt'])

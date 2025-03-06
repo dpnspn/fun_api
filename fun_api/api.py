@@ -150,6 +150,19 @@ class Session:
             **kwargs
         )
 
+
+    def post(self, *args, **kwargs):
+        '''
+        Sends a POST request to the API.
+        '''
+        self.check_credentials()
+        
+        return self.session.post(
+            *args,
+            headers={'Authorization': f'Bearer {self.credentials.access_token}'},
+            **kwargs
+        )
+
     
     def password_login(self, username:str, password:str):
         '''
@@ -251,3 +264,100 @@ class Session:
         )
 
         return [Project(i) for i in data.json()['data']]
+
+
+    def get_project(self, id: int, author: int = None) -> "Project | None":
+        '''
+        Get a project by its ID.
+
+        If author not specified, uses your own ID.
+
+        If project not found, return None.
+        '''
+        if author == None:
+            author = self.user_id
+        
+        data = self.get(
+            f'https://{self.domain}/api/student/{author}/project/{id}'
+        )
+        try:
+            project = Project(data.json()['data'])
+        except:
+            return None
+        else:
+            return project
+    
+    
+    def new_project(self,
+        project_type: int,
+        title: int
+    ) -> int:
+        '''
+        Creates a new project.
+
+        Returns the project ID.
+        '''
+        if project_type not in range(0,10):
+            raise FunapiException('Invalid project type')
+        
+        data = self.post(
+            f'https://{self.domain}/api/student/{self.user_id}/project',
+            json={
+                'title': title,
+                'projectType': project_type,
+                'studentId': self.user_id
+            }
+        )
+        if data.status_code != 201:
+            raise FunapiException('Failed to create project')
+        
+        return int(data.text)
+    
+    
+    def edit_project(self,
+        id: int,
+        title: int = None,
+        description: str = None,
+        access_type: int = None
+    ) -> int:
+        '''
+        Edits an existing project.
+        '''
+        if title == None and description == None and access_type == None:
+            raise FunapiException('Specify data to edit!')
+        
+        if access_type not in [None,0,1,9]:
+            raise FunapiException('Invalid access type')
+
+        # fetching old project data because shit breaks if we just pass in the new data
+        data = self.get_project(id)
+
+        if data == None:
+            raise FunapiException('Project not found')
+        
+        data = data.data
+
+        if title:
+            data['title'] = title
+        if description:
+            data['desc'] = description
+        if access_type:
+            data['accessType'] = access_type
+
+        data = self.post(
+            f'https://{self.domain}/api/student/{self.user_id}/project/{id}',
+            json=data
+        )
+        if data.status_code != 201:
+            raise FunapiException('Failed to edit project')
+        
+    
+    # def delete_project(self, project_id: int):
+    #     '''
+    #     Deletes a project.
+    #
+    #     This endpoint is not implemented on the server yet.
+    #     '''
+    #     data = self.post(
+    #         f'https://{self.domain}/api/student/{self.user_id}/project/{project_id}/delete/'
+    #     )
