@@ -1,0 +1,7 @@
+__pycache__
+fun_api.egg-info
+build
+dist
+.vscode
+.credentials
+*.ignore
