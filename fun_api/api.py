@@ -44,7 +44,7 @@ class Credentials:
         Returns the decoded info gotten from the token.
         '''
         data = self.access_token.split('.')[1]
-        return json.loads(base64.b64decode(data))
+        return json.loads(base64.b64decode(data+'=='))
 
 
     def load(self) -> bool:
@@ -71,7 +71,7 @@ class Credentials:
         Saves current credentials to the file.
         '''
         if self.filename is None:
-            return False
+            return
         
         with open(self.filename, 'w') as f:
             data = f'{self.access_token}\n{self.refresh_token}\n'\
