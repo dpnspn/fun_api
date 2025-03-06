@@ -131,6 +131,10 @@ class Session:
 
         if self.credentials.is_access_expired:
             # todo add this refresh thingie
+            # todo idfk what the refresh API endpoint is,
+            # todo but it's definitely not /auth/refresh
+            # todo since it 403's on me and asks for login and password.
+            raise FunapiException('Access token expired, refresh API not implemented yet')
             self.refresh()
 
 
