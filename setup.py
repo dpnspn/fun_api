@@ -6,6 +6,6 @@ setup(
     description='FunCode Student API',
     author='moontr3',
     packages=find_packages(),
-    install_requires=['requests'],
+    install_requires=['requests','dateutil'],
     zip_safe=False
 )

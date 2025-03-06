@@ -228,3 +228,22 @@ class Session:
         Shorthand for Session.get_user(Session.user_id).
         '''
         return self.get_user(self.user_id)
+
+
+    def get_projects(self, user_id: int = None) -> List[Project]:
+        '''
+        Gets a list of projects of the user.
+
+        Use None to get your own projects.
+
+        If user not found, returns an empty list. All questions
+        to the API's creator.
+        '''
+        if user_id == None:
+            user_id = self.user_id
+        
+        data = self.get(
+            f'https://{self.domain}/api/student/{user_id}/project'
+        )
+
+        return [Project(i) for i in data.json()['data']]
