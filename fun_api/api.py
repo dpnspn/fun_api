@@ -266,19 +266,14 @@ class Session:
         return [Project(i) for i in data.json()['data']]
 
 
-    def get_project(self, id: int, author: int = None) -> "Project | None":
+    def get_project(self, id: int) -> "Project | None":
         '''
         Get a project by its ID.
 
-        If author not specified, uses your own ID.
-
         If project not found, return None.
         '''
-        if author == None:
-            author = self.user_id
-        
         data = self.get(
-            f'https://{self.domain}/api/student/{author}/project/{id}'
+            f'https://{self.domain}/api/student/{self.user_id}/project/{id}'
         )
         try:
             project = Project(data.json()['data'])

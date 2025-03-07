@@ -52,4 +52,6 @@ class Project:
         self.resources: List[Resource] = [
             Resource(i) for i in data['resources']
         ]
-        self.url: "str | None" = data.get('url', None) # not available in previews
+        self.url: "str | None" = data.get('url', None)
+        if self.url and self.url.startswith('/pub'):
+            self.url = f'https://learn.funcode.school{self.url}'
