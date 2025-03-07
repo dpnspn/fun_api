@@ -20,6 +20,7 @@ pip install git+https://github.com/dpnspn/fun_api.git
 
 ## TODO
 
+- [ ] Документация
 - [x] Получение проектов из FunSpace
 - [ ] Изменение содержания проектов из FunSpace
 - [ ] Получение FunBox'ов пользователя
